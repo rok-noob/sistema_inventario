@@ -1,0 +1,22 @@
+name: Verificacion CI PHP
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  lint-php:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Revisar sintaxis de todos los archivos PHP
+        run: find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
