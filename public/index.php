@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Controllers\AuthController;
 use App\Helpers\CookieHelper;
 use App\Helpers\ResponseHelper;
 use Dotenv\Dotenv;
@@ -52,8 +53,11 @@ if (!in_array($route, $publicRoutes, true) && empty($_SESSION['usuario'])) {
 
 // 6. Tabla de rutas: 'METODO /ruta' => [Controlador::class, 'metodo', 'permiso.requerido' | null]
 $routes = [
-    // Ruta temporal de verificación del Bloque 2.1 (la quitamos cuando quede el Login)
-    'GET /test-router' => [null, 'testRouter', null],
+    'GET /login'        => [AuthController::class, 'showLogin', null],
+    'POST /api/login'   => [AuthController::class, 'login', null],
+    'GET /logout'       => [AuthController::class, 'logout', null],
+    'GET /dashboard'    => [AuthController::class, 'dashboard', null],
+    'POST /api/cookies' => [AuthController::class, 'gestionarCookies', null],
 ];
 
 $routeKey = "{$method} {$route}";
