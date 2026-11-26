@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si el archivo o carpeta física sí existe (ej. public/js/auth.js), sírvelo directo
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Todo lo demás mándalo al Front Controller sin perder parámetros GET
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
