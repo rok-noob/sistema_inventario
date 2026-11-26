@@ -33,6 +33,19 @@ class ProductoDAO
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function listarActivos(): array
+    {
+        $sql = 'SELECT p.id, p.sku, p.nombre, p.precio_unitario, p.stock_minimo,
+                       c.nombre AS categoria_nombre
+                FROM productos p
+                INNER JOIN categorias c ON c.id = p.categoria_id
+                WHERE p.activo = 1
+                ORDER BY p.nombre ASC';
+
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function obtenerPorId(int $id): ?array
     {
         $sql = 'SELECT id, sku, nombre, descripcion, categoria_id,

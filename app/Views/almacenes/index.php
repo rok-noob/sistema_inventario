@@ -36,6 +36,13 @@
                             </ul>
                         </li>
                     <?php endif; ?>
+                    <?php if (in_array('movimientos.ver', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/movimientos">
+                                <i class="bi bi-arrow-left-right me-1"></i> Movimientos
+                            </a>
+                        </li>
+                    <?php endif; ?>
                     <?php if (in_array('usuarios.gestionar', $permisos, true)): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/usuarios">

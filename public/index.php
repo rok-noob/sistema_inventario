@@ -7,6 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Controllers\AlmacenController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoriaController;
+use App\Controllers\MovimientoController;
 use App\Controllers\ProductoController;
 use App\Controllers\RolController;
 use App\Controllers\UsuarioController;
@@ -103,6 +104,13 @@ $routes = [
     'GET /api/productos/detalle'   => [ProductoController::class, 'obtener', 'catalogos.ver'],
     'POST /api/productos/guardar'  => [ProductoController::class, 'guardar', 'catalogos.gestionar'],
     'POST /api/productos/eliminar' => [ProductoController::class, 'eliminar', 'catalogos.gestionar'],
+
+    // Movimientos de Inventario (Entradas, Salidas y Transferencias)
+    'GET /movimientos'                   => [MovimientoController::class, 'index', 'movimientos.ver'],
+    'GET /api/movimientos'               => [MovimientoController::class, 'listar', 'movimientos.ver'],
+    'GET /api/movimientos/detalle'       => [MovimientoController::class, 'obtener', 'movimientos.ver'],
+    'GET /api/movimientos/stock-almacen' => [MovimientoController::class, 'stockAlmacen', 'movimientos.ver'],
+    'POST /api/movimientos/registrar'    => [MovimientoController::class, 'registrar', 'movimientos.ver'],
 ];
 
 $routeKey = "{$method} {$route}";
