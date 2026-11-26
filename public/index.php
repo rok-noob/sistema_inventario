@@ -7,6 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Controllers\AlmacenController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoriaController;
+use App\Controllers\FtpController;
 use App\Controllers\MovimientoController;
 use App\Controllers\ProductoController;
 use App\Controllers\RolController;
@@ -111,6 +112,16 @@ $routes = [
     'GET /api/movimientos/detalle'       => [MovimientoController::class, 'obtener', 'movimientos.ver'],
     'GET /api/movimientos/stock-almacen' => [MovimientoController::class, 'stockAlmacen', 'movimientos.ver'],
     'POST /api/movimientos/registrar'    => [MovimientoController::class, 'registrar', 'movimientos.ver'],
+
+    // Gestor Remoto de Evidencias FTP
+    'GET /ftp'                       => [FtpController::class, 'index', 'ftp.gestionar'],
+    'GET /api/ftp/explorar'          => [FtpController::class, 'explorar', 'ftp.gestionar'],
+    'GET /api/ftp/evidencias'        => [FtpController::class, 'listarEvidencias', 'ftp.gestionar'],
+    'POST /api/ftp/carpeta/crear'    => [FtpController::class, 'crearCarpeta', 'ftp.gestionar'],
+    'POST /api/ftp/carpeta/eliminar' => [FtpController::class, 'eliminarCarpeta', 'ftp.gestionar'],
+    'POST /api/ftp/subir'            => [FtpController::class, 'subir', 'ftp.gestionar'],
+    'GET /api/ftp/descargar'         => [FtpController::class, 'descargar', 'ftp.gestionar'],
+    'POST /api/ftp/archivo/eliminar' => [FtpController::class, 'eliminarArchivo', 'ftp.gestionar'],
 ];
 
 $routeKey = "{$method} {$route}";
