@@ -14,15 +14,42 @@
             <a class="navbar-brand fw-bold" href="<?= BASE_URL ?>/dashboard">
                 <i class="bi bi-box-seam me-1"></i> Inventario Pro
             </a>
-            <div class="d-flex align-items-center gap-3 text-white">
-                <span class="small d-none d-sm-inline">
-                    <i class="bi bi-person-circle me-1"></i>
-                    <?= htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8') ?>
-                    <span class="badge bg-primary ms-1"><?= htmlspecialchars($usuario['rol_nombre'], ENT_QUOTES, 'UTF-8') ?></span>
-                </span>
-                <a href="<?= BASE_URL ?>/logout" class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-box-arrow-right"></i> Salir
-                </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="<?= BASE_URL ?>/dashboard">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <?php if (in_array('usuarios.gestionar', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/usuarios">
+                                <i class="bi bi-people me-1"></i> Usuarios
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (in_array('roles.gestionar', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/roles">
+                                <i class="bi bi-shield-check me-1"></i> Roles y Permisos
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 text-white">
+                    <span class="small">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <?= htmlspecialchars($usuario['nombre'], ENT_QUOTES, 'UTF-8') ?>
+                        <span class="badge bg-primary ms-1"><?= htmlspecialchars($usuario['rol_nombre'], ENT_QUOTES, 'UTF-8') ?></span>
+                    </span>
+                    <a href="<?= BASE_URL ?>/logout" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -105,6 +132,7 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const BASE_URL = <?= json_encode(BASE_URL) ?>;
 

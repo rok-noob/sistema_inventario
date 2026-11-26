@@ -5,6 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\RolController;
+use App\Controllers\UsuarioController;
 use App\Helpers\CookieHelper;
 use App\Helpers\ResponseHelper;
 use Dotenv\Dotenv;
@@ -53,16 +55,32 @@ if (!in_array($route, $publicRoutes, true) && empty($_SESSION['usuario'])) {
 
 // 6. Tabla de rutas: 'METODO /ruta' => [Controlador::class, 'metodo', 'permiso.requerido' | null]
 $routes = [
-    'GET /login'            => [AuthController::class, 'showLogin', null],
-    'POST /api/login'       => [AuthController::class, 'login', null],
-    'GET /logout'           => [AuthController::class, 'logout', null],
-    'GET /dashboard'        => [AuthController::class, 'dashboard', null],
-    'POST /api/cookies'     => [AuthController::class, 'gestionarCookies', null],
-    'GET /recuperar'        => [AuthController::class, 'showRecuperar', null],
-    'POST /api/recuperar'   => [AuthController::class, 'solicitarRecuperacion', null],
-    'GET /restablecer'      => [AuthController::class, 'showRestablecer', null],
-    'POST /api/restablecer' => [AuthController::class, 'restablecerPassword', null],
+    // Autenticación, Dashboard y Cookies
+    'GET /login'               => [AuthController::class, 'showLogin', null],
+    'POST /api/login'          => [AuthController::class, 'login', null],
+    'GET /logout'              => [AuthController::class, 'logout', null],
+    'GET /dashboard'           => [AuthController::class, 'dashboard', null],
+    'POST /api/cookies'        => [AuthController::class, 'gestionarCookies', null],
+    'GET /recuperar'           => [AuthController::class, 'showRecuperar', null],
+    'POST /api/recuperar'      => [AuthController::class, 'solicitarRecuperacion', null],
+    'GET /restablecer'         => [AuthController::class, 'showRestablecer', null],
+    'POST /api/restablecer'    => [AuthController::class, 'restablecerPassword', null],
+
+    // CRUD de Roles y Permisos (RBAC)
+    'GET /roles'               => [RolController::class, 'index', 'roles.gestionar'],
+    'GET /api/roles'           => [RolController::class, 'listar', 'roles.gestionar'],
+    'GET /api/roles/detalle'   => [RolController::class, 'obtener', 'roles.gestionar'],
+    'POST /api/roles/guardar'  => [RolController::class, 'guardar', 'roles.gestionar'],
+    'POST /api/roles/eliminar' => [RolController::class, 'eliminar', 'roles.gestionar'],
+
+    // CRUD de Usuarios (RBAC)
+    'GET /usuarios'               => [UsuarioController::class, 'index', 'usuarios.gestionar'],
+    'GET /api/usuarios'           => [UsuarioController::class, 'listar', 'usuarios.gestionar'],
+    'GET /api/usuarios/detalle'   => [UsuarioController::class, 'obtener', 'usuarios.gestionar'],
+    'POST /api/usuarios/guardar'  => [UsuarioController::class, 'guardar', 'usuarios.gestionar'],
+    'POST /api/usuarios/eliminar' => [UsuarioController::class, 'eliminar', 'usuarios.gestionar'],
 ];
+
 $routeKey = "{$method} {$route}";
 
 // Redirección raíz por defecto
