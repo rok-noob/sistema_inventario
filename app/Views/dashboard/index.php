@@ -24,6 +24,25 @@
                             <i class="bi bi-speedometer2 me-1"></i> Dashboard
                         </a>
                     </li>
+                    <?php if (in_array('catalogos.ver', $permisos, true)): ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-tags me-1"></i> Catálogos
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/productos"><i class="bi bi-box me-1"></i> Productos</a></li>
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/categorias"><i class="bi bi-folder me-1"></i> Categorías</a></li>
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/almacenes"><i class="bi bi-building me-1"></i> Almacenes</a></li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (in_array('movimientos.ver', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/movimientos">
+                                <i class="bi bi-arrow-left-right me-1"></i> Movimientos
+                            </a>
+                        </li>
+                    <?php endif; ?>
                     <?php if (in_array('usuarios.gestionar', $permisos, true)): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/usuarios">
