@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Controllers\AlmacenController;
 use App\Controllers\AuthController;
+use App\Controllers\CategoriaController;
+use App\Controllers\ProductoController;
 use App\Controllers\RolController;
 use App\Controllers\UsuarioController;
 use App\Helpers\CookieHelper;
@@ -79,6 +82,27 @@ $routes = [
     'GET /api/usuarios/detalle'   => [UsuarioController::class, 'obtener', 'usuarios.gestionar'],
     'POST /api/usuarios/guardar'  => [UsuarioController::class, 'guardar', 'usuarios.gestionar'],
     'POST /api/usuarios/eliminar' => [UsuarioController::class, 'eliminar', 'usuarios.gestionar'],
+
+    // Catálogo de Categorías
+    'GET /categorias'               => [CategoriaController::class, 'index', 'catalogos.ver'],
+    'GET /api/categorias'           => [CategoriaController::class, 'listar', 'catalogos.ver'],
+    'GET /api/categorias/detalle'   => [CategoriaController::class, 'obtener', 'catalogos.ver'],
+    'POST /api/categorias/guardar'  => [CategoriaController::class, 'guardar', 'catalogos.gestionar'],
+    'POST /api/categorias/eliminar' => [CategoriaController::class, 'eliminar', 'catalogos.gestionar'],
+
+    // Catálogo de Almacenes
+    'GET /almacenes'               => [AlmacenController::class, 'index', 'catalogos.ver'],
+    'GET /api/almacenes'           => [AlmacenController::class, 'listar', 'catalogos.ver'],
+    'GET /api/almacenes/detalle'   => [AlmacenController::class, 'obtener', 'catalogos.ver'],
+    'POST /api/almacenes/guardar'  => [AlmacenController::class, 'guardar', 'catalogos.gestionar'],
+    'POST /api/almacenes/eliminar' => [AlmacenController::class, 'eliminar', 'catalogos.gestionar'],
+
+    // Catálogo de Productos
+    'GET /productos'               => [ProductoController::class, 'index', 'catalogos.ver'],
+    'GET /api/productos'           => [ProductoController::class, 'listar', 'catalogos.ver'],
+    'GET /api/productos/detalle'   => [ProductoController::class, 'obtener', 'catalogos.ver'],
+    'POST /api/productos/guardar'  => [ProductoController::class, 'guardar', 'catalogos.gestionar'],
+    'POST /api/productos/eliminar' => [ProductoController::class, 'eliminar', 'catalogos.gestionar'],
 ];
 
 $routeKey = "{$method} {$route}";
