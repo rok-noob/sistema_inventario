@@ -53,13 +53,16 @@ if (!in_array($route, $publicRoutes, true) && empty($_SESSION['usuario'])) {
 
 // 6. Tabla de rutas: 'METODO /ruta' => [Controlador::class, 'metodo', 'permiso.requerido' | null]
 $routes = [
-    'GET /login'        => [AuthController::class, 'showLogin', null],
-    'POST /api/login'   => [AuthController::class, 'login', null],
-    'GET /logout'       => [AuthController::class, 'logout', null],
-    'GET /dashboard'    => [AuthController::class, 'dashboard', null],
-    'POST /api/cookies' => [AuthController::class, 'gestionarCookies', null],
+    'GET /login'            => [AuthController::class, 'showLogin', null],
+    'POST /api/login'       => [AuthController::class, 'login', null],
+    'GET /logout'           => [AuthController::class, 'logout', null],
+    'GET /dashboard'        => [AuthController::class, 'dashboard', null],
+    'POST /api/cookies'     => [AuthController::class, 'gestionarCookies', null],
+    'GET /recuperar'        => [AuthController::class, 'showRecuperar', null],
+    'POST /api/recuperar'   => [AuthController::class, 'solicitarRecuperacion', null],
+    'GET /restablecer'      => [AuthController::class, 'showRestablecer', null],
+    'POST /api/restablecer' => [AuthController::class, 'restablecerPassword', null],
 ];
-
 $routeKey = "{$method} {$route}";
 
 // Redirección raíz por defecto

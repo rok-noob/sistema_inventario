@@ -57,4 +57,63 @@ class UsuarioDAO
 
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+
+    /**
+     * Guarda el hash del token de recuperación y su fecha/hora de expiración.
+     */
+    public function guardarTokenRecuperacion(int $usuarioId, string $tokenHash, string $expira): bool
+    {
+        $sql = "UPDATE usuarios
+                SET token_recuperacion = :token,
+                    token_expira = :expira
+                WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':token'  => $tokenHash,
+            ':expira' => $expira,
+            ':id'     => $usuarioId,
+        ]);
+    }
+
+    /**
+     * Busca un usuario activo cuyo token de recuperación coincida y no haya expirado.
+     */
+    public function buscarPorTokenValido(string $tokenHash): ?array
+    {
+        $sql = "SELECT id, nombre, email, activo
+                FROM usuarios
+                WHERE token_recuperacion = :token
+                  AND token_expira IS NOT NULL
+                  AND token_expira > :ahora
+                  AND activo = 1
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':token' => $tokenHash,
+            ':ahora' => date('Y-m-d H:i:s'),
+        ]);
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $usuario ?: null;
+    }
+
+    /**
+     * Actualiza la contraseña del usuario e invalida el token de un solo uso.
+     */
+    public function actualizarPasswordYLimpiarToken(int $usuarioId, string $passwordHash): bool
+    {
+        $sql = "UPDATE usuarios
+                SET password_hash = :password_hash,
+                    token_recuperacion = NULL,
+                    token_expira = NULL
+                WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':password_hash' => $passwordHash,
+            ':id'            => $usuarioId,
+        ]);
+    }
 }
