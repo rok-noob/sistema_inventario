@@ -65,6 +65,82 @@ class MovimientoDAO
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Consulta filtrada por rango de fechas, tipo y almacén para previsualización y exportación (Excel, PDF, CSV).
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function listarParaReporte(
+        ?string $fechaInicio = null,
+        ?string $fechaFin = null,
+        ?string $tipo = null,
+        ?int $almacenId = null,
+        int $limite = 1000
+    ): array {
+        $sql = "SELECT m.id, m.tipo, m.almacen_origen_id, m.almacen_destino_id,
+                       ao.nombre AS almacen_origen_nombre,
+                       ad.nombre AS almacen_destino_nombre,
+                       m.usuario_id, u.nombre AS usuario_nombre,
+                       m.observaciones, m.fecha,
+                       COUNT(dm.id) AS total_partidas,
+                       COALESCE(SUM(dm.cantidad), 0) AS total_unidades,
+                       COALESCE(SUM(dm.cantidad * dm.costo_unitario), 0.00) AS monto_total,
+                       COALESCE(
+                           GROUP_CONCAT(
+                               CONCAT(p.sku, ' x', dm.cantidad)
+                               ORDER BY dm.id ASC
+                               SEPARATOR ', '
+                           ),
+                           ''
+                       ) AS productos_resumen
+                FROM movimientos m
+                INNER JOIN usuarios u ON u.id = m.usuario_id
+                LEFT JOIN almacenes ao ON ao.id = m.almacen_origen_id
+                LEFT JOIN almacenes ad ON ad.id = m.almacen_destino_id
+                LEFT JOIN detalle_movimientos dm ON dm.movimiento_id = m.id
+                LEFT JOIN productos p ON p.id = dm.producto_id
+                WHERE 1 = 1";
+
+        $params = [];
+
+        if ($fechaInicio !== null && $fechaInicio !== '') {
+            $sql .= ' AND m.fecha >= :fecha_inicio';
+            $params[':fecha_inicio'] = $fechaInicio . ' 00:00:00';
+        }
+
+        if ($fechaFin !== null && $fechaFin !== '') {
+            $sql .= ' AND m.fecha <= :fecha_fin';
+            $params[':fecha_fin'] = $fechaFin . ' 23:59:59';
+        }
+
+        if ($tipo !== null && in_array($tipo, ['ENTRADA', 'SALIDA', 'TRANSFERENCIA'], true)) {
+            $sql .= ' AND m.tipo = :tipo';
+            $params[':tipo'] = $tipo;
+        }
+
+        if ($almacenId !== null && $almacenId > 0) {
+            $sql .= ' AND (m.almacen_origen_id = :alm_origen OR m.almacen_destino_id = :alm_destino)';
+            $params[':alm_origen']  = $almacenId;
+            $params[':alm_destino'] = $almacenId;
+        }
+
+        $sql .= ' GROUP BY m.id, m.tipo, m.almacen_origen_id, m.almacen_destino_id,
+                           ao.nombre, ad.nombre, m.usuario_id, u.nombre,
+                           m.observaciones, m.fecha
+                  ORDER BY m.fecha DESC, m.id DESC
+                  LIMIT :limite';
+
+        $stmt = $this->db->prepare($sql);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':limite', max(1, min($limite, 2000)), PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function obtenerPorId(int $id): ?array
     {
         $sqlHeader = 'SELECT m.id, m.tipo, m.almacen_origen_id, m.almacen_destino_id,
