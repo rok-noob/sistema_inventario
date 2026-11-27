@@ -10,6 +10,7 @@ use App\Controllers\CategoriaController;
 use App\Controllers\FtpController;
 use App\Controllers\MovimientoController;
 use App\Controllers\ProductoController;
+use App\Controllers\ReporteController;
 use App\Controllers\RolController;
 use App\Controllers\UsuarioController;
 use App\Helpers\CookieHelper;
@@ -122,6 +123,13 @@ $routes = [
     'POST /api/ftp/subir'            => [FtpController::class, 'subir', 'ftp.gestionar'],
     'GET /api/ftp/descargar'         => [FtpController::class, 'descargar', 'ftp.gestionar'],
     'POST /api/ftp/archivo/eliminar' => [FtpController::class, 'eliminarArchivo', 'ftp.gestionar'],
+
+    // Reportes Dinámicos (Excel, PDF, CSV)
+    'GET /reportes'                  => [ReporteController::class, 'index', 'reportes.exportar'],
+    'GET /api/reportes/previsualizar' => [ReporteController::class, 'previsualizar', 'reportes.exportar'],
+    'GET /api/reportes/csv'          => [ReporteController::class, 'exportarCsv', 'reportes.exportar'],
+    'GET /api/reportes/excel'        => [ReporteController::class, 'exportarExcel', 'reportes.exportar'],
+    'GET /api/reportes/pdf'          => [ReporteController::class, 'exportarPdf', 'reportes.exportar'],
 ];
 
 $routeKey = "{$method} {$route}";

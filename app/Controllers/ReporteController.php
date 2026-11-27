@@ -13,7 +13,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Throwable;
 
@@ -201,7 +200,7 @@ class ReporteController
 
                 $sheet->getStyle("I{$fila}")
                     ->getNumberFormat()
-                    ->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+                    ->setFormatCode('$#,##0.00');
 
                 $fila++;
             }
@@ -227,7 +226,7 @@ class ReporteController
                 ]);
                 $sheet->getStyle("I{$fila}")
                     ->getNumberFormat()
-                    ->setFormatCode(NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+                    ->setFormatCode('$#,##0.00');
             }
 
             foreach (range('A', 'K') as $col) {
@@ -265,9 +264,9 @@ class ReporteController
                 $filtros['tipo'],
                 $filtros['almacen_id']
             );
-            $resumen      = $this->calcularResumen($registros);
-            $textoFiltros = htmlspecialchars($this->formatearDescripcionFiltros($filtros), ENT_QUOTES, 'UTF-8');
-            $usuarioNombre = htmlspecialchars((string) ($_SESSION['usuario']['nombre'] ?? 'Sistema'), ENT_QUOTES, 'UTF-8');
+            $resumen         = $this->calcularResumen($registros);
+            $textoFiltros    = htmlspecialchars($this->formatearDescripcionFiltros($filtros), ENT_QUOTES, 'UTF-8');
+            $usuarioNombre   = htmlspecialchars((string) ($_SESSION['usuario']['nombre'] ?? 'Sistema'), ENT_QUOTES, 'UTF-8');
             $fechaGeneracion = date('Y-m-d H:i:s');
 
             $filasHtml = '';
@@ -275,16 +274,16 @@ class ReporteController
                 $filasHtml = '<tr><td colspan="10" style="text-align:center; padding: 14px; color: #666;">No se encontraron movimientos con los filtros seleccionados.</td></tr>';
             } else {
                 foreach ($registros as $row) {
-                    $folio      = '#' . (int) $row['id'];
-                    $fecha      = htmlspecialchars((string) $row['fecha'], ENT_QUOTES, 'UTF-8');
-                    $tipo       = htmlspecialchars((string) $row['tipo'], ENT_QUOTES, 'UTF-8');
-                    $origen     = htmlspecialchars((string) ($row['almacen_origen_nombre'] ?? '—'), ENT_QUOTES, 'UTF-8');
-                    $destino    = htmlspecialchars((string) ($row['almacen_destino_nombre'] ?? '—'), ENT_QUOTES, 'UTF-8');
-                    $productos  = htmlspecialchars((string) ($row['productos_resumen'] ?? ''), ENT_QUOTES, 'UTF-8');
-                    $unidades   = (int) $row['total_unidades'];
-                    $monto      = '$' . number_format((float) $row['monto_total'], 2);
+                    $folio       = '#' . (int) $row['id'];
+                    $fecha       = htmlspecialchars((string) $row['fecha'], ENT_QUOTES, 'UTF-8');
+                    $tipo        = htmlspecialchars((string) $row['tipo'], ENT_QUOTES, 'UTF-8');
+                    $origen      = htmlspecialchars((string) ($row['almacen_origen_nombre'] ?? '—'), ENT_QUOTES, 'UTF-8');
+                    $destino     = htmlspecialchars((string) ($row['almacen_destino_nombre'] ?? '—'), ENT_QUOTES, 'UTF-8');
+                    $productos   = htmlspecialchars((string) ($row['productos_resumen'] ?? ''), ENT_QUOTES, 'UTF-8');
+                    $unidades    = (int) $row['total_unidades'];
+                    $monto       = '$' . number_format((float) $row['monto_total'], 2);
                     $registrador = htmlspecialchars((string) $row['usuario_nombre'], ENT_QUOTES, 'UTF-8');
-                    $obs        = htmlspecialchars((string) ($row['observaciones'] ?? '—'), ENT_QUOTES, 'UTF-8');
+                    $obs         = htmlspecialchars((string) ($row['observaciones'] ?? '—'), ENT_QUOTES, 'UTF-8');
 
                     $colorTipo = match ($row['tipo']) {
                         'ENTRADA'       => '#198754',
