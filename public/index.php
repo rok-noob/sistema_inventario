@@ -28,11 +28,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 3. Detectar ruta base automáticamente (funciona en XAMPP y en hosting raíz)
-$basePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+// 3. Detectar ruta base automáticamente (funciona en XAMPP y en hosting raíz /htdocs)
+$scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])), '/');
+$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+if ($scriptDir !== '' && str_ends_with($scriptDir, '/public') && !str_starts_with($requestUri, $scriptDir)) {
+    $basePath = substr($scriptDir, 0, -7);
+} else {
+    $basePath = $scriptDir;
+}
 define('BASE_URL', $basePath);
 
-$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $route = '/' . ltrim(substr($requestUri, strlen(BASE_URL)), '/');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
@@ -125,11 +131,11 @@ $routes = [
     'POST /api/ftp/archivo/eliminar' => [FtpController::class, 'eliminarArchivo', 'ftp.gestionar'],
 
     // Reportes Dinámicos (Excel, PDF, CSV)
-    'GET /reportes'                  => [ReporteController::class, 'index', 'reportes.exportar'],
+    'GET /reportes'                   => [ReporteController::class, 'index', 'reportes.exportar'],
     'GET /api/reportes/previsualizar' => [ReporteController::class, 'previsualizar', 'reportes.exportar'],
-    'GET /api/reportes/csv'          => [ReporteController::class, 'exportarCsv', 'reportes.exportar'],
-    'GET /api/reportes/excel'        => [ReporteController::class, 'exportarExcel', 'reportes.exportar'],
-    'GET /api/reportes/pdf'          => [ReporteController::class, 'exportarPdf', 'reportes.exportar'],
+    'GET /api/reportes/csv'           => [ReporteController::class, 'exportarCsv', 'reportes.exportar'],
+    'GET /api/reportes/excel'         => [ReporteController::class, 'exportarExcel', 'reportes.exportar'],
+    'GET /api/reportes/pdf'           => [ReporteController::class, 'exportarPdf', 'reportes.exportar'],
 ];
 
 $routeKey = "{$method} {$route}";
