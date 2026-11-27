@@ -7,8 +7,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Controllers\AlmacenController;
 use App\Controllers\AuthController;
 use App\Controllers\CategoriaController;
+use App\Controllers\FtpController;
 use App\Controllers\MovimientoController;
 use App\Controllers\ProductoController;
+use App\Controllers\ReporteController;
 use App\Controllers\RolController;
 use App\Controllers\UsuarioController;
 use App\Helpers\CookieHelper;
@@ -111,6 +113,23 @@ $routes = [
     'GET /api/movimientos/detalle'       => [MovimientoController::class, 'obtener', 'movimientos.ver'],
     'GET /api/movimientos/stock-almacen' => [MovimientoController::class, 'stockAlmacen', 'movimientos.ver'],
     'POST /api/movimientos/registrar'    => [MovimientoController::class, 'registrar', 'movimientos.ver'],
+
+    // Gestor Remoto de Evidencias FTP
+    'GET /ftp'                       => [FtpController::class, 'index', 'ftp.gestionar'],
+    'GET /api/ftp/explorar'          => [FtpController::class, 'explorar', 'ftp.gestionar'],
+    'GET /api/ftp/evidencias'        => [FtpController::class, 'listarEvidencias', 'ftp.gestionar'],
+    'POST /api/ftp/carpeta/crear'    => [FtpController::class, 'crearCarpeta', 'ftp.gestionar'],
+    'POST /api/ftp/carpeta/eliminar' => [FtpController::class, 'eliminarCarpeta', 'ftp.gestionar'],
+    'POST /api/ftp/subir'            => [FtpController::class, 'subir', 'ftp.gestionar'],
+    'GET /api/ftp/descargar'         => [FtpController::class, 'descargar', 'ftp.gestionar'],
+    'POST /api/ftp/archivo/eliminar' => [FtpController::class, 'eliminarArchivo', 'ftp.gestionar'],
+
+    // Reportes Dinámicos (Excel, PDF, CSV)
+    'GET /reportes'                  => [ReporteController::class, 'index', 'reportes.exportar'],
+    'GET /api/reportes/previsualizar' => [ReporteController::class, 'previsualizar', 'reportes.exportar'],
+    'GET /api/reportes/csv'          => [ReporteController::class, 'exportarCsv', 'reportes.exportar'],
+    'GET /api/reportes/excel'        => [ReporteController::class, 'exportarExcel', 'reportes.exportar'],
+    'GET /api/reportes/pdf'          => [ReporteController::class, 'exportarPdf', 'reportes.exportar'],
 ];
 
 $routeKey = "{$method} {$route}";

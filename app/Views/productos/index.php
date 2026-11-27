@@ -43,6 +43,20 @@
                             </a>
                         </li>
                     <?php endif; ?>
+                    <?php if (in_array('ftp.gestionar', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/ftp">
+                                <i class="bi bi-hdd-network me-1"></i> Evidencias FTP
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (in_array('reportes.exportar', $permisos, true)): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= BASE_URL ?>/reportes">
+                                <i class="bi bi-file-earmark-bar-graph me-1"></i> Reportes
+                            </a>
+                        </li>
+                    <?php endif; ?>
                     <?php if (in_array('usuarios.gestionar', $permisos, true)): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/usuarios">
