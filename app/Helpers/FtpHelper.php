@@ -229,7 +229,7 @@ class FtpHelper
         $this->conectar();
         assert($this->conn !== null);
 
-        $rutaRemota  = $this->resolverRutaRemota($subrutaDestino);
+        $rutaRemota   = $this->resolverRutaRemota($subrutaDestino);
         $carpetaPadre = dirname($rutaRemota);
         $this->asegurarDirectorioAbsoluto($carpetaPadre);
 
@@ -253,7 +253,12 @@ class FtpHelper
             throw new RuntimeException('Acceso denegado: el archivo está fuera del directorio de evidencias.');
         }
 
-        $tmpFile = tempnam(sys_get_temp_dir(), 'ftp_ev_');
+        $tmpDir = dirname(__DIR__, 2) . '/storage/tmp';
+        if (!is_dir($tmpDir) && !@mkdir($tmpDir, 0755, true) && !is_dir($tmpDir)) {
+            throw new RuntimeException('No se pudo preparar el directorio temporal local para la descarga.');
+        }
+
+        $tmpFile = tempnam($tmpDir, 'ftp_ev_');
         if ($tmpFile === false) {
             throw new RuntimeException('No se pudo crear el archivo temporal local para la descarga.');
         }

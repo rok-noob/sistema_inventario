@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Bloquear acceso directo desde el navegador a carpetas y archivos sensibles
+    RewriteRule ^(app|vendor|storage|\.git|\.github)(/|$) - [F,L]
+    RewriteRule ^(\.env.*|composer\.(json|lock)|database\.sql|\.gitignore)$ - [F,L]
+
+    # Redirigir internamente el tráfico público hacia /public/ manteniendo la URL limpia
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
